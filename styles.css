@@ -1,0 +1,29 @@
+.center-text {
+  text-align: center;
+}
+
+.center-element {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.query{
+  border: 1px solid black;
+}
+
+.padding{
+  padding: 20px;
+}
+
+.red{
+  color: red;
+}
+
+.downloadHidden{
+  visibility: hidden;
+}
+
+.downloadShow{
+
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hospitality Pro Search Query</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      function createCSVFile(data) {
+        fileNameSet();
+          const keys = Object.keys(data[0]);
+
+        const commaSeparatedString = [keys.join(",") , data.map(row => keys.map(key => row[key]).join(",")).join("\n")].join("\n");
+
+        const csvBlob = new Blob([commaSeparatedString]);
+
+        const a2 = document.getElementById("a2");
+
+        a2.href = URL.createObjectURL(csvBlob);
+
+        jQuery('#downloadHider').addClass('downloadShow').removeClass('downloadHidden');
+        clearData();
+     }
+
+     function clearData() {
+            document.getElementById('restaurantPostal').value = "";
+            document.getElementById('occupation').value = "Host(ess)";
+            document.getElementById('minExp').value = "None";
+            document.getElementById('distance').value = "";
+            document.getElementById('under19').checked = false;
+            document.getElementById('preferredOcc').checked = false;
+            document.getElementById('daysSinceCreated').value = "";
+      }
+      function fileNameSet() {
+        const today = new Date();
+        const fileNameFormatted = document.getElementById("occupation").value + ' ' + document.getElementById("restaurantPostal").value + ' ' + document.getElementById("distance").value + 'km ' + today.toISOString().substr(0, 19) + ' Experience_' + document.getElementById("minExp").value + ' Last_' + document.getElementById("daysSinceCreated").value + '_Days.csv';
+        const htmlStringFormatted = '<a id="a2" download="' + fileNameFormatted.toString() + '">Download CSV File</a>';
+        document.getElementById("downloadHider").innerHTML = htmlStringFormatted;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="">
+      <h1 class="center-text">mPloy Hospitality Pro Search Query</h1><hr><br>
+      <form action="" onsubmit="return false" method="POST" enctype="multipart/form-data" class="center-element border">
+        <div class="center-element">
+          <label for="password" class="center-element">Password</label>
+          <input type="password" name="password" id="password" required>
+        </div>
+        <div class="center-element">
+        <label for="occupation" class="center-element">Occupation</label>
+        <select name="occupation" id="occupation" value="Host(ess)" required>
+          <optgroup label="Front of House">
+            <option value="Host(ess)" id="host">Host(ess)</option>
+            <option value="Server" id="server">Server</option>
+            <option value="Server Asst" id="serverasst">Server Assistant</option>
+            <option value="Counter" id="counter">Counter/Cashier</option>
+            <option value="Bartender" id="bar">Bartender</option>
+            <option value="Barback" id="barback">Barback/Junior Bartender</option>
+            <option value="Manager" id="manager">Manager</option>
+            <option value="Shift Manager" id="shiftmanager">Shift Manager</option>
+            <option value="Beverage Manager" id="bevmanager">Beverage Manager</option>
+          </optgroup>
+          <optgroup label="Back of House">
+            <option value="Kitchen Manager" id="kitchenmanager">Kitchen Manager</option>
+            <option value="Line Cook" id="line">Line Cook</option>
+            <option value="Sous Chef" id="sous">Sous Chef</option>
+            <option value="Head Chef" id="head">Head Chef</option>
+            <option value="Prep Cook" id="prep">Prep Cook</option>
+            <option value="Kitchen Helper" id="helper">Kitchen Helper</option>
+            <option value="Expeditor" id="expo">Expeditor</option>
+            <option value="Baker" id="baker">Baker</option>
+            <option value="Dishwasher" id="dishwasher">Dishwasher</option>
+          </optgroup>
+        </select>
+        </div>
+        <div class="center-element">
+          <label for="restaurantPostal" class="center-element">Restaurant Postal Code</label>
+          <input type="text" name="restaurantPostal" id="restaurantPostal" placeholder="eg. A1A 1A1" required>
+        </div>
+        <div class="center-element">
+        <label for="distance" class="center-element">Distance</label>
+        <input style="width: 160px" type="number" name="distance" id="distance" placeholder="Maximum Distance (km)" min="1" required>
+        </div>
+        <div class="center-element">
+          <label for="minExp" class="center-element">Minimum Required Years of Experience</label>
+          <select name="minExp" id="minExp" value="None" required>
+            <option value="None">< 1 Month</option>
+            <option value="1-3Months">1-3 Months</option>
+            <option value="4-6Months">4-6 Months</option>
+            <option value="6-9Months">6-9 Months</option>
+            <option value="9-12Months">9-12 Months</option>
+            <option value="1-2Years">1-2 Years</option>
+            <option value="2-4Years">2-4 Years</option>
+            <option value="4Years">4+ Years</option>
+          </select>
+        </div>
+        <div class="center-element">
+        <label for="daysSinceCreated" class="center-element">Max. Days Since WP Account Created</label>
+        <input type="number" name="daysSinceCreated" id="daysSinceCreated" min="1" required>
+        </div>
+        <div class="center-element">
+          <label for="under19" class="center-element">Include Ages Under 19?</label>
+          <input type="checkbox" name="under19" id="under19">
+        </div>
+        <div class="center-element">
+          <label for="preferredOcc" class="center-element">Narrow List by Preferred Occupation?</label>
+          <input type="checkbox" name="preferredOcc" id="preferredOcc">
+        </div>
+        <div class="center-text">
+          <button type="submit" id="search">Search</button>
+        </div>
+      </form>
+      <div id="downloadHider" class="downloadHidden center-text padding">
+        <a id="a2" download="' + fileNameFormatted + '">Download CSV File</a>
+      </div>
+      <script>
+      const button = document.getElementById('search');
+      const query = async () => {
+
+        const obj = {
+          occupation: document.getElementById("occupation").value,
+          postal: document.getElementById("restaurantPostal").value,
+          distance: document.getElementById("distance").value,
+          minExp: document.getElementById("minExp").value,
+          includeUnder: document.getElementById("under19").checked,
+          daysSinceCreated: document.getElementById("daysSinceCreated").value,
+          preferredOcc: document.getElementById("preferredOcc").checked,
+          password: document.getElementById("password").value,
+        }
+
+        await fetch('https://employment-dev.mploy.cloud/user/userQuery', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj),
+        })
+        .then((response) => response.text())
+        .then((returnedData) => {
+          const jsonData = JSON.parse(returnedData);
+          if(jsonData.statusCode === 401){
+            alert(jsonData.string);
+            return 401;
+          }
+          const newData = jsonData.data.map(worker => {
+            const newWorker = {
+              occupation: document.getElementById("occupation").value,
+              firstName: worker.firstName,
+              lastName: worker.lastName,
+              id: worker.id,
+              under19: worker.under19,
+              mobile: worker.mobile,
+              email: worker.email,
+              postal: worker.addressPostalCode,
+              experience: worker[jsonData.durationStandardized],
+              createdOn: worker.createdOn,
+              modifiedOn: worker.modifiedOn,
+              distance: worker.distance,
+            }
+            if(newWorker.experience === ""){ newWorker.experience = "N/A"; }
+            return newWorker;
+          })
+          console.log(newData);
+          createCSVFile(newData);
+        })
+        .catch(error => {
+          console.log(error);
+          return error;
+        });
+      }
+
+      document.getElementById("search").onclick = query;
+      </script>
+    </div>
+  </body>
+</html>
