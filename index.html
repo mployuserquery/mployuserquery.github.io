@@ -47,10 +47,6 @@
       <h1 class="center-text">mPloy Hospitality Pro Search Query</h1><hr><br>
       <form action="" onsubmit="return false" method="POST" enctype="multipart/form-data" class="center-element border">
         <div class="center-element">
-          <label for="password" class="center-element">Password</label>
-          <input type="password" name="password" id="password" required>
-        </div>
-        <div class="center-element">
         <label for="occupation" class="center-element">Occupation</label>
         <select name="occupation" id="occupation" value="Host(ess)" required>
           <optgroup label="Front of House">
@@ -74,6 +70,11 @@
             <option value="Expeditor" id="expo">Expeditor</option>
             <option value="Baker" id="baker">Baker</option>
             <option value="Dishwasher" id="dishwasher">Dishwasher</option>
+          </optgroup>
+          <optgroup label="Other">
+            <option value="Barista" id="barista">Barista</option>
+            <option value="Brand Ambassador" id="ambassador">Brand Ambassador</option>
+            <option value="Valet" id="valet">Valet</option>
           </optgroup>
         </select>
         </div>
@@ -109,7 +110,11 @@
         <div class="center-element">
           <label for="preferredOcc" class="center-element">Narrow List by Preferred Occupation?</label>
           <input type="checkbox" name="preferredOcc" id="preferredOcc">
-        </div>
+        </div><hr>
+        <div class="center-element">
+          <label for="password" class="center-element padding"><b>Password</b></label>
+          <input type="password" name="password" id="password" required>
+        </div><hr>
         <div class="center-text">
           <button type="submit" id="search">Search</button>
         </div>
